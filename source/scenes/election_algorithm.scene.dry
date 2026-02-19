@@ -37,7 +37,7 @@ for (var party of Q.parties) {
 }
 
 // --- FPTP-style distortion (Option 3) ---
-var p = 8; // adjust for stronger/weaker FPTP effect
+var p = 2; // adjust for stronger/weaker FPTP effect
 
 // Step 1: compute raw proportional shares
 var rawShares = {};
