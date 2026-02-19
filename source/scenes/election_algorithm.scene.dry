@@ -61,15 +61,19 @@ for (var party of Q.parties) {
 // to do that, we multiply party_normalized*1000 and divide the rounded number by 10.
 for (var party of Q.parties) {
     //Q[party+'_normalized'] = Q[party + '_support']/total_support;
-    Q[party+'_votes_dec'] = Math.round(Q[party+'_normalized']*1000)/10;
-    if (Q.use_decimals) {
-        Q[party+'_votes'] = Q[party+'_votes_dec'];
-        Q[party + '_votes_disp'] = Q[party+'_votes_dec'].toFixed(1);
-    } else {
-        //integer mode
-        Q[party+'_votes'] = Math.round(Q[party+'_normalized']*100);
-        Q[party + '_votes_disp'] = Q[party+'_votes_dec'].toFixed(1);
-    }
+    // Always compute vote share with one decimal
+var vote_percent = Q[party + '_normalized'] * 100;
+
+// Display value (always 1 decimal)
+Q[party + '_votes_disp'] = vote_percent.toFixed(1);
+
+// Internal numeric value
+if (Q.use_decimals) {
+    Q[party + '_votes'] = Number(Q[party + '_votes_disp']);
+} else {
+    Q[party + '_votes'] = Math.round(vote_percent);
+}
+
     //Q[party+'_votes'] = Q[party+'_votes_dec'];
     // display
 }
