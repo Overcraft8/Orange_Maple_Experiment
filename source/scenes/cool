@@ -1,0 +1,42 @@
+// 1. calculate support for each of the parties
+var total_support = 0;
+for (var party of Q.parties) {
+    var party_support = 0;
+    for (var c of Q.classes) {
+        if (Q.old_demographics) {
+            party_support += Q[c] * Q[c + '_' + party];
+        } else {
+            party_support += Q[c] * Q[c + '_' + party + '_normalized'];
+        }
+    }
+    Q[party + '_support'] = party_support;
+    total_support += party_support;
+}
+
+// --- FPTP-style distortion (Option 3) ---
+var p = 1.5; // adjust strength of FPTP effect
+var rawShares = {};
+var rawSum = 0;
+
+for (var party of Q.parties) {
+    rawShares[party] = Q[party + '_support'] / total_support;
+    rawSum += Math.pow(rawShares[party], p);
+}
+
+for (var party of Q.parties) {
+    Q[party + '_normalized'] = Math.pow(rawShares[party], p) / rawSum;
+}
+// ----------------------------------------
+
+// 3. Convert to displayed votes
+for (var party of Q.parties) {
+    Q[party+'_votes_dec'] = Math.round(Q[party+'_normalized']*1000)/10;
+
+    if (Q.use_decimals) {
+        Q[party+'_votes'] = Q[party+'_votes_dec'];
+        Q[party + '_votes_disp'] = Q[party+'_votes_dec'].toFixed(1);
+    } else {
+        Q[party+'_votes'] = Math.round(Q[party+'_normalized']*100);
+        Q[party + '_votes_disp'] = Q[party+'_votes_dec'].toFixed(1);
+    }
+}
