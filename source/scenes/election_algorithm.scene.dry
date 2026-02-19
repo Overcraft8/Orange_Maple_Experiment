@@ -35,10 +35,11 @@ for (var party of Q.parties) {
     Q[party + '_support'] = party_support;
     total_support += party_support;
 }
-// Apply FPTP-style distortion using exponent p
-var p = 1.5; // tweak this: 1.2 = mild FPTP, 1.5 = strong FPTP, 2.0 = brutal FPTP
 
-// First compute raw normalized shares
+// --- FPTP-style distortion (Option 3) ---
+var p = 1.5; // adjust for stronger/weaker FPTP effect
+
+// Step 1: compute raw proportional shares
 var rawShares = {};
 var rawSum = 0;
 
@@ -47,10 +48,11 @@ for (var party of Q.parties) {
     rawSum += Math.pow(rawShares[party], p);
 }
 
-// Now compute distorted shares
+// Step 2: compute distorted shares
 for (var party of Q.parties) {
     Q[party + '_normalized'] = Math.pow(rawShares[party], p) / rawSum;
 }
+// ----------------------------------------
 
 
 // 2. normalize support (fraction)
@@ -58,7 +60,7 @@ for (var party of Q.parties) {
 // TODO: round to 1 decimal instead of rounding to integers
 // to do that, we multiply party_normalized*1000 and divide the rounded number by 10.
 for (var party of Q.parties) {
-    Q[party+'_normalized'] = Q[party + '_support']/total_support;
+    //Q[party+'_normalized'] = Q[party + '_support']/total_support;
     Q[party+'_votes_dec'] = Math.round(Q[party+'_normalized']*1000)/10;
     if (Q.use_decimals) {
         Q[party+'_votes'] = Q[party+'_votes_dec'];
