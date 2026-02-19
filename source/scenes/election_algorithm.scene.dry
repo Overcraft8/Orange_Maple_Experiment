@@ -34,7 +34,7 @@ for (var party of Q.parties) {
     }
     Q[party + '_support'] = party_support;
     total_support += party_support;
-
+}
 // Apply FPTP-style distortion using exponent p
 var p = 1.5; // tweak this: 1.2 = mild FPTP, 1.5 = strong FPTP, 2.0 = brutal FPTP
 
@@ -53,7 +53,6 @@ for (var party of Q.parties) {
 }
 
 
-}
 // 2. normalize support (fraction)
 // 3. Round to integers
 // TODO: round to 1 decimal instead of rounding to integers
