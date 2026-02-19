@@ -41,6 +41,23 @@ on-arrival: {!
 // set old results
 // election threshold constitutional reform
 // banning parties
+
+// --- Apply FPTP-style distortion to _votes BEFORE assigning _r ---
+var p = 3.0; // adjust strength of FPTP effect
+var distorted = {};
+var distorted_sum = 0;
+
+// Step 1: exponentiate each party's vote share
+for (var party of Q.parties) {
+    distorted[party] = Math.pow(Q[party + '_votes'], p);
+    distorted_sum += distorted[party];
+}
+
+// Step 2: convert to distorted percentages (0–100)
+for (var party of Q.parties) {
+    distorted[party] = distorted[party] / distorted_sum * 100;
+}
+
 var new_party_sum = 0;
 for (var party of Q.parties) {
     Q['old_' + party + '_r'] = Q[party + '_r'];
@@ -48,11 +65,13 @@ for (var party of Q.parties) {
         if (Q[party + '_votes'] < Q.electoral_threshold || (Q.electoral_threshold > 1 && party == 'other') || Q[party + '_banned']) {
             Q[party + '_r'] = 0;
         } else {
-            Q[party + '_r'] = Q[party + '_votes'];
+            Q[party + '_r'] = distorted[party];
+
         }
         new_party_sum += Q[party + '_r'];
     } else {
-        Q[party + '_r'] = Q[party + '_votes'];
+        Q[party + '_r'] = distorted[party];
+
     }
     // if we use decimals, then we might want to truncate the numbers
     if (Q.use_decimals) {
