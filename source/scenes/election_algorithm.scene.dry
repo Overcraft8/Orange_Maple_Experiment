@@ -60,23 +60,17 @@ for (var party of Q.parties) {
 // TODO: round to 1 decimal instead of rounding to integers
 // to do that, we multiply party_normalized*1000 and divide the rounded number by 10.
 for (var party of Q.parties) {
-    //Q[party+'_normalized'] = Q[party + '_support']/total_support;
-    // Always compute vote share with one decimal
-var vote_percent = Q[party + '_normalized'] * 100;
 
-// Display value (always 1 decimal)
-Q[party + '_votes_disp'] = vote_percent.toFixed(1);
+    // Always compute vote share as a percentage
+    var vote_percent = Q[party + '_normalized'] * 100;
 
-// Internal numeric value
-if (Q.use_decimals) {
+    // Display value (always 1 decimal)
+    Q[party + '_votes_disp'] = vote_percent.toFixed(1);
+
+    // Internal numeric value used for seat allocation
     Q[party + '_votes'] = Number(Q[party + '_votes_disp']);
-} else {
-    Q[party + '_votes'] = Math.round(vote_percent);
 }
 
-    //Q[party+'_votes'] = Q[party+'_votes_dec'];
-    // display
-}
 !}
 go-to: jumpScene
 
